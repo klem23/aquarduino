@@ -12,6 +12,9 @@ TODO : add schematics
 
 
 LED Light ctrl : high speed (PWM) transistor switch circuit
+
 Pump and fan ctrl : 12V Emitter transistor switch circuit with flyback diode
-level sensor : basic switch with internal pull-off resistor
+
+Level sensor : basic switch with internal pull-off resistor
+
 LED : basic serial circuit with pull-of resistor for running check.
