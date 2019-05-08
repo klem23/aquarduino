@@ -4,8 +4,6 @@
 #include "scheduler.h"
 #include "clockRTC.h"
 
-#include <Wire.h>
-
 #define BUTTON     2
 #define GREEN_LED  3
 #define RED_LED    4
@@ -13,12 +11,12 @@
 #define BLUE_PIN   9
 #define WHITE_PIN  10
 
-#define OSMO_LEVEL_PIN  8
-#define OSMO_BURN_PIN   11
-#define OSMO_SECU_PIN   12
-#define OSMO_PUMP       5  //6
-#define CABIN_FAN       6   //5
-#define FAN_PIN         7  //7
+#define OSMO_LEVEL_PIN  11
+#define OSMO_BURN_PIN   12
+#define OSMO_SECU_PIN   13
+#define OSMO_PUMP       7
+#define CABIN_FAN       6
+#define FAN_PIN         5
 
 #include <OneWire.h>
 
@@ -29,7 +27,8 @@ Scheduler* sch;
 
 
 ClockRTC* ck1;
-int i =0;
+boolean blue_force;
+
 void setup() {
   
   // put your setup code here, to run once:
@@ -46,14 +45,17 @@ void setup() {
     lll = new LedLightLib();
     //160 & 140 without fan
     lll->setSchedule(BLUE_PIN, 250, startTime, 180, stopTime, 180);
-    lll->setSchedule(WHITE_PIN, 210, startTime2, 180, stopTime2, 180);
+    lll->setSchedule(WHITE_PIN, 250, startTime2, 180, stopTime2, 180);
     lll->setFanPin(FAN_PIN);
-    lll->setShift(25);
+    //lll->setShift(25);
     
     //sch = new Scheduler(); 
     //sch->setSchedule(CABIN_FAN, 30, 1);
+
+  blue_force = false;
     
   Serial.begin(9600);
+  pinMode(BUTTON, INPUT);
   pinMode(GREEN_LED, OUTPUT);
   pinMode(RED_LED, OUTPUT);
   pinMode(CABIN_FAN, OUTPUT);
@@ -68,6 +70,21 @@ void loop() {
   // put your main code here, to run repeatedly: 
   digitalWrite(GREEN_LED, HIGH);
   digitalWrite(RED_LED, HIGH);
+
+
+  int blue_butt = digitalRead(BUTTON);
+   
+   if(blue_butt == HIGH){
+     if(blue_force){
+      blue_force = false;
+      lll->setForcePin(BLUE_PIN, false);
+     }else{
+       blue_force = true;
+       lll->setForcePin(BLUE_PIN, true);
+     }
+   }
+
+  
   osmo->run();
   lll->run();
   //sch->run();
