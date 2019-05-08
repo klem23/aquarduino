@@ -116,11 +116,11 @@ void ClockRTC::printDate(){
 
   Date now = getDate();
   Serial.println("printDate :");
-  Serial.print(now.y);
+  Serial.print(now.d);
   Serial.print("/");
   Serial.print(now.m);
-  Serial.print("/");
-  Serial.print(now.d);
+  Serial.print("/20");
+  Serial.print(now.y);
   Serial.print("   ");
   Serial.print(now.h);
   Serial.print(":");
