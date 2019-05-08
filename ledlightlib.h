@@ -29,6 +29,7 @@ class LedLightLib{
     int nbGrp;
     int fanPin;
     byte shift;
+    int forcePin;
     
     ClockRTC* ck;
 
@@ -49,6 +50,7 @@ class LedLightLib{
     void setFanPin(int pin);
   
     void setShift(byte shift_value);
+    void setForcePin(int pin, boolean on);
 
     void run();  
   

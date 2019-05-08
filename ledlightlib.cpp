@@ -1,27 +1,28 @@
 #include "ledlightlib.h"
 
 
-LedLightLib::LedLightLib(){
-  nbGrp = 0;
-  fanPin = 255;
-  shift = 0;
-  lp = NULL;
-  ck = new ClockRTC(0x68);
+LedLightLib::LedLightLib()
+:nbGrp(0),
+fanPin(-1),
+shift(0),
+forcePin(-1),
+lp(nullptr),
+ck(new ClockRTC(0x68))
+{
+
 }
 
-LedLightLib::LedLightLib(int light_pin, byte max_power){
-    nbGrp = 1;
-    fanPin = 255;
-    shift = 0;
-    lp = new lightParam;
+LedLightLib::LedLightLib(int light_pin, byte max_power)
+:nbGrp(1),
+fanPin(-1),
+shift(0),
+forcePin(-1),
+lp(new lightParam),
+ck(new ClockRTC(0x68)){
+
     lp->ledPin = light_pin;
     lp->maxPower = max_power;
     lp->next = NULL;
-    
-    ck = new ClockRTC(0x68);
-    
-   // pinMode(WHITE_PIN, OUTPUT);
-   // analogWrite(WHITE_PIN, 0);
 } 
 
 
@@ -127,6 +128,16 @@ void LedLightLib::setFanPin(int pin){
    digitalWrite(fanPin, LOW); 
 }
 
+void LedLightLib::setForcePin(int pin, boolean on){
+  if(on){
+    forcePin = pin; 
+  }else{
+    forcePin = -1;
+    pinMode(forcePin, OUTPUT);
+  }
+
+}
+
 void LedLightLib::run(){
   bool fan = false;
   
@@ -139,6 +150,7 @@ void LedLightLib::run(){
   Serial.print(now.h);
   Serial.print(":");
   Serial.println(now.mn);
+
   
   lightParam* tmp = lp;
   uint8_t powL;
@@ -176,10 +188,20 @@ void LedLightLib::run(){
     	 }
      }
 
-     Serial.print("LLL pin : ");
-     Serial.print(tmp->ledPin);
-     Serial.print("  power : ");
-     Serial.println(powL);
+    if(forcePin != -1){
+      Serial.print("LLL FORCE pin : ");
+      Serial.println(forcePin);
+      if(forcePin == tmp->ledPin){
+        powL = tmp->maxPower;
+      }else{
+        powL = 0;
+      }
+    }
+
+    Serial.print("LLL pin : ");
+    Serial.print(tmp->ledPin);
+    Serial.print("  power : ");
+    Serial.println(powL);
 
     analogWrite(tmp->ledPin, powL);
     
@@ -189,12 +211,11 @@ void LedLightLib::run(){
 
     tmp = (lightParam*)tmp->next;
   } 
-  
-  if(fanPin != 255){
-    if(fan){
-       digitalWrite(fanPin, HIGH); 
-    }else{
-       digitalWrite(fanPin, LOW); 
-    }
+
+  if((fanPin != -1)&&(fan)){
+    digitalWrite(fanPin, HIGH); 
+  }else{
+    digitalWrite(fanPin, LOW); 
   }
+  
 }
