@@ -48,8 +48,8 @@ void OsmoLib::run(){
       }
    }
    
-   if((millis() - pumpStartTime > PUMP_TIME)&&(pumpStartTime != 0)){
-       level = digitalRead(levelPin); 
+   if((pumpStartTime != 0)&&(millis() - pumpStartTime > PUMP_TIME)){
+       level = digitalRead(levelPin);
        if(level != levelTriggerState){
          digitalWrite(pumpTriggerPin, LOW);
          pumpStartTime = 0;

@@ -3,7 +3,7 @@
 
 #include "Arduino.h"
 
-#define BOUNCE_TIME 1000
+#define BOUNCE_TIME 30000
 #define PUMP_TIME 2000
 
 class OsmoLib
