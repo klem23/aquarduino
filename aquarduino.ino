@@ -32,19 +32,19 @@ boolean blue_force;
 void setup() {
   
   // put your setup code here, to run once:
-    osmo = new OsmoLib(OSMO_LEVEL_PIN, OSMO_PUMP);
+    osmo = new OsmoLib(OSMO_LEVEL_PIN, OSMO_PUMP, LOW);
     //osmo = new OsmoLib(BUTTON, 13);
     //osmo->setPumpBurnLevelPin(OSMO_BURN_PIN);
     //osmo->setSecurityLevelPin(OSMO_SECU_PIN);
 
 
-    Date startTime(8, 0, 0);
+    Date startTime(9, 0, 0);
     Date stopTime(23, 50, 0);
-    Date startTime2(11, 00, 0);
+    Date startTime2(13, 00, 0);
     Date stopTime2(21, 50, 0);
     lll = new LedLightLib();
     //160 & 140 without fan
-    lll->setSchedule(BLUE_PIN, 250, startTime, 180, stopTime, 180);
+    lll->setSchedule(BLUE_PIN, 250, startTime, 300, stopTime, 180);
     lll->setSchedule(WHITE_PIN, 250, startTime2, 180, stopTime2, 180);
     lll->setFanPin(FAN_PIN);
     //lll->setShift(25);
