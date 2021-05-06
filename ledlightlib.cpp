@@ -151,7 +151,8 @@ void LedLightLib::run(){
   Serial.print(":");
   Serial.println(now.mn);
 
-  
+  if(now.h > 24) return;
+
   lightParam* tmp = lp;
   uint8_t powL;
   while(tmp != NULL){
