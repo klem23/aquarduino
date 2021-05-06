@@ -213,7 +213,7 @@ Date Date::operator+(uint32_t minutes){
 }
 
 Date Date::operator-(uint32_t minutes){
-   uint32_t tmp_mn;
+   int32_t tmp_mn;
    int8_t tmp_h;
    uint32_t tmp;
    
@@ -224,18 +224,18 @@ Date Date::operator-(uint32_t minutes){
    }else{
      tmp = minutes/ 60;
      tmp_h = this->h - tmp;
-     if(this->mn > (minutes - tmp * 60)){
-       tmp_mn = this->mn - (minutes - tmp * 60) ;
-     }else{
-       tmp_mn = this->mn - (60 - (minutes - tmp * 60));
-       tmp_h--;
-     }
+     tmp_mn = this->mn - (minutes - tmp * 60) ;
    }
   
    if(tmp_h < 0){
-     tmp_h = 24 - tmp_h; 
+     tmp_h = 24 + tmp_h; 
    }
-  
+
+   if(tmp_mn < 0){
+     tmp_mn = 60 + tmp_mn;
+     tmp_h--;
+   }
+
    if(this->type == TIME){
      return(Date(tmp_h, tmp_mn, this->sec));
    }else{
