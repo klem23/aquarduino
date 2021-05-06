@@ -80,8 +80,7 @@ Date ClockRTC::getTime(){
    uint8_t d = BDC2Bin(WIRE.read() & 0x3F);
    uint8_t m = BDC2Bin(WIRE.read() & 0x1F);
    uint8_t y = BDC2Bin(WIRE.read());
-    
-   
+
    return Date(h, mn, sec);
 }
 

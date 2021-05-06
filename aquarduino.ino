@@ -14,9 +14,10 @@
 #define OSMO_LEVEL_PIN  11
 #define OSMO_BURN_PIN   12
 #define OSMO_SECU_PIN   13
-#define OSMO_PUMP       7
-#define CABIN_FAN       6
-#define FAN_PIN         5
+#define OSMO_PUMP       5
+#define FAN_PIN         6
+#define CABIN_FAN       7
+
 
 #include <OneWire.h>
 
@@ -32,20 +33,19 @@ boolean blue_force;
 void setup() {
   
   // put your setup code here, to run once:
-    osmo = new OsmoLib(OSMO_LEVEL_PIN, OSMO_PUMP, LOW);
-    //osmo = new OsmoLib(BUTTON, 13);
+    //osmo = new OsmoLib(OSMO_LEVEL_PIN, OSMO_PUMP, HIGH);
+    //osmo = new OsmoLib(BUTTON, OSMO_PUMP);
     //osmo->setPumpBurnLevelPin(OSMO_BURN_PIN);
     //osmo->setSecurityLevelPin(OSMO_SECU_PIN);
 
 
     Date startTime(9, 0, 0);
     Date stopTime(23, 50, 0);
-    Date startTime2(13, 00, 0);
-    Date stopTime2(21, 50, 0);
+    Date startTime2(12, 00, 0);
+    Date stopTime2(22, 00, 0);
     lll = new LedLightLib();
-    //160 & 140 without fan
-    lll->setSchedule(BLUE_PIN, 250, startTime, 300, stopTime, 180);
-    lll->setSchedule(WHITE_PIN, 250, startTime2, 180, stopTime2, 180);
+    lll->setSchedule(BLUE_PIN, 240, startTime, 180, stopTime, 180);
+    lll->setSchedule(WHITE_PIN, 240, startTime2, 120, stopTime2, 90);
     lll->setFanPin(FAN_PIN);
     //lll->setShift(25);
     
@@ -59,6 +59,7 @@ void setup() {
   pinMode(GREEN_LED, OUTPUT);
   pinMode(RED_LED, OUTPUT);
   pinMode(CABIN_FAN, OUTPUT);
+  pinMode(OSMO_PUMP, OUTPUT);
   ck1 = new ClockRTC(0x68);
   
   
@@ -85,23 +86,32 @@ void loop() {
    }
 
   
-  osmo->run();
+  //osmo->run();
   lll->run();
   //sch->run();
-  digitalWrite(GREEN_LED, LOW);
-  delay(1000);
+
    
   ck1->printDate();
   
   /*Cabinet Fan*/
-  Date d = ck1->getTime();
+  /*Date d = ck1->getTime();
   
   if((d.mn > 0)&&(d.mn < 2)){
     digitalWrite(CABIN_FAN, HIGH);
   }else{
     digitalWrite(CABIN_FAN, LOW);
+  }*/
+
+  //Osmo test
+  Date d = ck1->getTime();
+  if((d.mn == 0)&&(d.sec > 0)&&(d.sec < 5)){
+    digitalWrite(OSMO_PUMP, HIGH);
+  }else{
+    digitalWrite(OSMO_PUMP, LOW);
   }
 
+  digitalWrite(GREEN_LED, LOW);
+  delay(2000);
   
   
 }

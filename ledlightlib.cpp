@@ -156,9 +156,9 @@ void LedLightLib::run(){
   uint8_t powL;
   while(tmp != NULL){
 
-    switch(tmp->type){
+  switch(tmp->type){
         /*LINEAR*/
-	case 0:  
+	case 0:
 	 if(now < tmp->startTime){
                 powL = 0;
 	 }else if((now >= tmp->startTime)&&(now <= tmp->startTime + tmp->startLgth )){
@@ -167,11 +167,11 @@ void LedLightLib::run(){
                 powL = tmp->maxPower;
 	 }else if((now >= tmp->stopTime - tmp->stopLgth)&&(now <= tmp->stopTime)){
       		powL = (tmp->maxPower - shift) * (1.0 - (float)(now - (tmp->stopTime - tmp->stopLgth))/(float)tmp->stopLgth) + shift;
-    	 }else if((now >= tmp->stopTime)){
-                powL = 0;
-    	 }else{
-                powL = 0;
-    	 }
+	 }else if((now >= tmp->stopTime)){
+		powL = 0;
+	 }else{
+		powL = 0;
+	 }
 	 break;
         /*Linear without constant*/
 	case 1:
