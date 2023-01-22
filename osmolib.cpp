@@ -10,6 +10,7 @@ OsmoLib::OsmoLib(int level_pin, int pump_trigger_pin, int trigger_state){
 
    levelWaveBounce = 0;
    pumpStartTime = 0;
+   pumpRepeat = 0;
    
    pumpDisabled = false;
    
@@ -35,29 +36,47 @@ void OsmoLib::run(){
    level = digitalRead(levelPin);
    
    if(level == HIGH)
-     Serial.println("HIGH");
+     Serial.println("Osmo HIGH");
    else
-      Serial.println("LOW");
+      Serial.println("Osmo LOW");
 
    if(level == levelTriggerState){
       if(levelWaveBounce == 0){
         levelWaveBounce = millis(); 
-      }else if(((millis() - levelWaveBounce) > BOUNCE_TIME)&&(pumpStartTime == 0)&&(pumpDisabled == false)){
+      }else if(((millis() - levelWaveBounce) > BOUNCE_TIME)&&(pumpStartTime == 0)&&(!pumpDisabled)){
         digitalWrite(pumpTriggerPin, HIGH);
         pumpStartTime = millis();
       }
    }
    
-   if((pumpStartTime != 0)&&(millis() - pumpStartTime > PUMP_TIME)){
+   if((pumpStartTime != 0)&&(millis() - pumpStartTime > PUMP_TIME)&&(!pumpDisabled)){
        level = digitalRead(levelPin);
        if(level != levelTriggerState){
          digitalWrite(pumpTriggerPin, LOW);
          pumpStartTime = 0;
          levelWaveBounce = 0;
+         pumpRepeat = 0;
+       }else if(pumpRepeat > 3){
+          digitalWrite(pumpTriggerPin, LOW);
+          pumpDisabled = true;
        }else{
+         pumpRepeat++;
          pumpStartTime = millis();
        }
    }
+
+  if((pumpDisabled)&&(millis() - pumpStartTime > ONE_HOUR)){
+         pumpStartTime = 0;
+         levelWaveBounce = 0;
+         pumpRepeat = 0;
+         pumpDisabled = false;
+  }else if((pumpDisabled)&&(millis() - pumpStartTime < 0)){
+      pumpStartTime = 0;
+      levelWaveBounce = 0;
+      pumpRepeat = 0;
+      pumpDisabled = false;
+  }
+
    
    if(pumpBurnLevelPin != 255){
       int burn = digitalRead(pumpBurnLevelPin);

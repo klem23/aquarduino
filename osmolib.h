@@ -5,6 +5,7 @@
 
 #define BOUNCE_TIME 5000
 #define PUMP_TIME 3000
+#define ONE_HOUR 3600000
 
 class OsmoLib
 {
@@ -20,6 +21,7 @@ class OsmoLib
   
     int level;
     int pumpStartTime;
+    int pumpRepeat;
     int levelWaveBounce;
     
     boolean pumpDisabled;
