@@ -31,9 +31,19 @@ ClockRTC* ck1;
 boolean blue_force;
 
 void setup() {
+
+
+  pinMode(BUTTON, INPUT);
+  pinMode(GREEN_LED, OUTPUT);
+  pinMode(RED_LED, OUTPUT);
+  pinMode(CABIN_FAN, OUTPUT);
+  pinMode(OSMO_LEVEL_PIN, INPUT);
+  pinMode(OSMO_PUMP, OUTPUT);
+  ck1 = new ClockRTC(0x68);
+
   
   // put your setup code here, to run once:
-    //osmo = new OsmoLib(OSMO_LEVEL_PIN, OSMO_PUMP, HIGH);
+    osmo = new OsmoLib(OSMO_LEVEL_PIN, OSMO_PUMP, HIGH);
     //osmo = new OsmoLib(BUTTON, OSMO_PUMP);
     //osmo->setPumpBurnLevelPin(OSMO_BURN_PIN);
     //osmo->setSecurityLevelPin(OSMO_SECU_PIN);
@@ -42,10 +52,10 @@ void setup() {
     Date startTime(9, 0, 0);
     Date stopTime(23, 50, 0);
     Date startTime2(12, 00, 0);
-    Date stopTime2(22, 00, 0);
+    Date stopTime2(21, 30, 0);
     lll = new LedLightLib();
-    lll->setSchedule(BLUE_PIN, 240, startTime, 180, stopTime, 180);
-    lll->setSchedule(WHITE_PIN, 240, startTime2, 120, stopTime2, 90);
+    lll->setSchedule(BLUE_PIN, 220, startTime, 180, stopTime, 180);
+    lll->setSchedule(WHITE_PIN, 180, startTime2, 120, stopTime2, 90);
     lll->setFanPin(FAN_PIN);
     //lll->setShift(25);
     
@@ -55,12 +65,7 @@ void setup() {
   blue_force = false;
     
   Serial.begin(9600);
-  pinMode(BUTTON, INPUT);
-  pinMode(GREEN_LED, OUTPUT);
-  pinMode(RED_LED, OUTPUT);
-  pinMode(CABIN_FAN, OUTPUT);
-  pinMode(OSMO_PUMP, OUTPUT);
-  ck1 = new ClockRTC(0x68);
+
   
   
   //Date d(2013, 6, 8, 14, 22, 45);
@@ -74,19 +79,19 @@ void loop() {
 
 
   int blue_butt = digitalRead(BUTTON);
-   
-   if(blue_butt == HIGH){
-     if(blue_force){
-      blue_force = false;
-      lll->setForcePin(BLUE_PIN, false);
-     }else{
-       blue_force = true;
-       lll->setForcePin(BLUE_PIN, true);
-     }
-   }
-
+  if(blue_butt == HIGH){
+      if(blue_force){
+          blue_force = false;
+          Serial.print("Blue force Mode Off\n");
+          lll->setForcePin(BLUE_PIN, false);
+      }else{
+          blue_force = true;
+          Serial.print("Blue force Mode On\n");
+          lll->setForcePin(BLUE_PIN, true);
+      }
+  }
   
-  //osmo->run();
+  osmo->run();
   lll->run();
   //sch->run();
 
@@ -102,13 +107,13 @@ void loop() {
     digitalWrite(CABIN_FAN, LOW);
   }*/
 
-  //Osmo test
-  Date d = ck1->getTime();
-  if((d.mn == 0)&&(d.sec > 0)&&(d.sec < 5)){
+  /*Osmo schedule*/
+  /*Date d = ck1->getTime();
+  if((d.mn == 0)&&(d.sec > 0)&&(d.sec < 4)){
     digitalWrite(OSMO_PUMP, HIGH);
   }else{
     digitalWrite(OSMO_PUMP, LOW);
-  }
+  }*/
 
   digitalWrite(GREEN_LED, LOW);
   delay(2000);
