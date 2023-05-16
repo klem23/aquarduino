@@ -38,7 +38,7 @@ void OsmoLib::run(){
    if(level == HIGH)
      Serial.println("Osmo HIGH");
    else
-      Serial.println("Osmo LOW");
+     Serial.println("Osmo LOW");
 
    if(level == levelTriggerState){
       if(levelWaveBounce == 0){
@@ -57,8 +57,8 @@ void OsmoLib::run(){
          levelWaveBounce = 0;
          pumpRepeat = 0;
        }else if(pumpRepeat > 3){
-          digitalWrite(pumpTriggerPin, LOW);
-          pumpDisabled = true;
+         digitalWrite(pumpTriggerPin, LOW);
+         pumpDisabled = true;
        }else{
          pumpRepeat++;
          pumpStartTime = millis();
@@ -66,10 +66,9 @@ void OsmoLib::run(){
    }
 
   if((pumpDisabled)&&(millis() - pumpStartTime > ONE_HOUR)){
-         pumpStartTime = 0;
-         levelWaveBounce = 0;
-         pumpRepeat = 0;
-         pumpDisabled = false;
+      pumpStartTime = 0;
+      levelWaveBounce = 0;
+      pumpRepeat = 0;
   }else if((pumpDisabled)&&(millis() - pumpStartTime < 0)){
       pumpStartTime = 0;
       levelWaveBounce = 0;

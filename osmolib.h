@@ -4,7 +4,7 @@
 #include "Arduino.h"
 
 #define BOUNCE_TIME 5000
-#define PUMP_TIME 3000
+#define PUMP_TIME 5000
 #define ONE_HOUR 3600000
 
 class OsmoLib
@@ -20,9 +20,9 @@ class OsmoLib
     int secuTriggerState;
   
     int level;
-    int pumpStartTime;
+    unsigned long pumpStartTime;
     int pumpRepeat;
-    int levelWaveBounce;
+    unsigned long levelWaveBounce;
     
     boolean pumpDisabled;
   
